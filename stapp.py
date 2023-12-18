@@ -6,7 +6,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 
 # Load the model
-@st.cache(allow_output_mutation=True)
+@st.cache_data
 def load_model():
     model = tf.keras.models.load_model('weights.best.hdf5')
     return model
@@ -29,21 +29,9 @@ if uploaded_file is not None:
         input_df = pd.read_csv(uploaded_file)
         preprocessed_data = preprocess_data(input_df)
 
-        if st.sidebar.button('Predict Demand'):
-            prediction = make_prediction(preprocessed_data, model)
-            # Display the prediction
-            st.subheader("Bike Sharing Demand Prediction")
-            st.write(f"Predicted Bike Demand: {prediction[0][0]:.2f} bikes")
-    except Exception as e:
-        st.error(f"An error occurred: {e}")
-
-else:
-    st.sidebar.write("Please upload a CSV file to make predictions.")
-
-
         # Make predictions
         if st.sidebar.button('Predict Demand'):
-            prediction = make_prediction(X_test, model)
+            prediction = make_prediction(preprocessed_data, model)
             st.subheader("Bike Sharing Demand Prediction")
             st.write(f"Predicted Bike Demand: {prediction[0][0]:.2f} bikes")
 
